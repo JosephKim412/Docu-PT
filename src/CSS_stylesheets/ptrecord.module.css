@@ -1,0 +1,166 @@
+.patientRecordContainer {
+  font-family: "Roboto", sans-serif;
+  background-color: #f9fafa;
+  padding: 20px;
+  max-width: 1300px;
+  margin: 15px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.labelPt {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  /* margin-bottom: 5px; */
+}
+.fieldContainer {
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  gap: 10px; /* Add space between the label and input */
+  margin-bottom: 5px; /* Add space between fields */
+}
+/* Larger Input Fields */
+.inputPt {
+  margin: 10px auto;
+  width: 100%; /* Ensure input spans the container */
+  padding: 180px; /* Corrected padding for height */
+  font-size: 26px; /* Increase font size for readability */
+  border: 1px solid #ccc; /* Standard border */
+  border-radius: 10px; /* Rounded corners */
+  background: #f7f7f7; /* Soft background */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.inputPt:focus {
+  border-color: #007bff; /* Highlight border on focus */
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2); /* Subtle glow on focus */
+  outline: none;
+}
+
+/* Date Input */
+.dateInput {
+  width: 100%; /* Ensure date input matches text input width */
+  padding: 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.dateInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+.buttonPT {
+  width: 150px;
+  margin: 20px auto;
+  font-size: 20px;
+  padding: 12px;
+  background-color: #cc66ff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.buttonPT:hover {
+  background-color: #b359e6;
+}
+
+.buttonPT:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.errorMessage {
+  color: #d9534f; /* Red color for error messages */
+  background-color: #f8d7da; /* Light red background */
+  padding: 10px;
+  border: 1px solid #f5c6cb;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.successMessage {
+  color: #28a745; /* Green color for success messages */
+  background-color: #d4edda; /* Light green background */
+  padding: 10px;
+  border: 1px solid #c3e6cb;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+/* React-Calendar Datepicker Styles */
+.react-datepicker-wrapper {
+  width: 100%; /* Match input width */
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.react-datepicker__input-container input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+  outline: none;
+}
+
+.react-datepicker {
+  font-family: "Roboto", sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.react-datepicker__header {
+  background-color: #007bff;
+  color: white;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+  border-radius: 10px 10px 0 0;
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  color: #333;
+  width: 40px;
+  line-height: 40px;
+  margin: 2px;
+  text-align: center;
+  border-radius: 50%;
+}
+
+.react-datepicker__day:hover {
+  background-color: #e6f7ff;
+  color: #007bff;
+}
+
+.react-datepicker__day--selected {
+  background-color: #007bff;
+  color: white;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: #0056b3;
+  color: white;
+}
+
+.react-datepicker__day--today {
+  font-weight: bold;
+  color: #007bff;
+}

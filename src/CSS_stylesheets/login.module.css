@@ -1,0 +1,126 @@
+/* General Reset (only applies globally if necessary) */
+:global(body) {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", "Roboto", sans-serif;
+  background-color: #f7f7f7; /* Light neutral background */
+  color: #333; /* Neutral dark text color */
+}
+
+/* Login-Specific Container */
+.loginContainer {
+  max-width: 600px; /* Wider container */
+  margin: 60px auto;
+  padding: 25px;
+  background-color: #f0e6ff; /* Clean light purple background */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  border: 1px solid #eaeaea; /* Light gray border for definition */
+}
+
+/* Login Heading */
+.loginHeading {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #444; /* Softer dark text color */
+  font-size: 24px;
+  font-weight: 500;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Login Input Fields */
+.loginInput {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0 20px;
+  border: 1px solid #ddd; /* Neutral border */
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #f9f9f9; /* Light gray background for inputs */
+  color: #333;
+  font-family: "Roboto", sans-serif;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Login Input Focus */
+.loginInput:focus {
+  border-color: #cc66ff; /* Purple border on focus */
+  outline: none;
+  box-shadow: 0 0 4px rgba(204, 102, 255, 0.4); /* Purple glow */
+}
+
+/* Login Buttons */
+.loginButton {
+  width: 100%;
+  padding: 12px;
+  background-color: #cc66ff; /* Vibrant purple */
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.loginButton:hover {
+  background-color: #b359e6; /* Slightly darker purple */
+  transform: scale(1.02); /* Subtle zoom effect */
+}
+
+/* Login Secondary Button */
+.loginSecondaryButton {
+  background-color: transparent;
+  color: #cc66ff;
+  border: 1px solid #cc66ff;
+  margin-top: 10px;
+}
+
+.loginSecondaryButton:hover {
+  background-color: #f7e9ff; /* Light purple background on hover */
+}
+
+/* Login Forget Password Link */
+.loginLink {
+  display: block;
+  text-align: right;
+  color: #cc66ff;
+  text-decoration: none;
+  font-size: 14px;
+  margin: -35px 0 50px;
+  font-family: "Roboto", sans-serif;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+  color: #b359e6; /* Slightly darker purple */
+}
+
+/* Login Checkbox Container */
+.loginCheckboxContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.loginCheckboxContainer input[type="checkbox"] {
+  margin-right: 8px;
+  accent-color: #cc66ff; /* Purple accent color */
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .loginContainer {
+    padding: 20px;
+    max-width: 95%; /* Maintain responsiveness */
+  }
+
+  .loginButton {
+    font-size: 14px;
+  }
+
+  .loginInput {
+    font-size: 14px;
+  }
+}

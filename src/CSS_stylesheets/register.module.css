@@ -1,0 +1,132 @@
+/* General Reset */
+:global(*) {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Register Component Styles */
+
+/* Scoped Container for the Register Component */
+.registerContainer {
+  font-family: "Roboto", sans-serif;
+  background-color: #f9fafb; /* Soft, modern background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  color: #333;
+}
+
+/* Scoped Form Styling */
+.registerForm {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 16px; /* Softer corners */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Form Header */
+.registerHeading {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 26px; /* Slightly larger and modern */
+  font-weight: 600;
+  color: #1a202c; /* Darker shade for better contrast */
+}
+
+/* Scoped Labels */
+.registerLabel {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: #4a5568; /* Softer gray for labels */
+}
+
+/* Scoped Input Fields */
+.registerInput {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px; /* Larger font for better readability */
+  border: 1px solid #e2e8f0; /* Light gray border */
+  border-radius: 12px;
+  background: #f7fafc; /* Slight off-white background */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.registerInput:focus {
+  border-color: #3182ce; /* A clean, modern blue */
+  box-shadow: 0 0 8px rgba(49, 130, 206, 0.5); /* Soft blue glow */
+  outline: none;
+}
+
+/* Submit Button */
+.registerButton {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(
+    90deg,
+    #667eea,
+    #764ba2
+  ); /* Gradient for a sleek look */
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.registerButton:hover {
+  transform: translateY(-2px); /* Subtle lift */
+  box-shadow: 0 8px 20px rgba(118, 75, 162, 0.3); /* Glow on hover */
+}
+
+/* Secondary Button */
+.secondaryButton {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5568;
+  background: #edf2f7; /* Soft gray background */
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.secondaryButton:hover {
+  background: #e2e8f0; /* Slightly darker gray */
+  border-color: #cbd5e0;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .registerForm {
+    padding: 30px;
+  }
+
+  .registerHeading {
+    font-size: 22px;
+  }
+
+  .registerInput {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .registerButton,
+  .secondaryButton {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
