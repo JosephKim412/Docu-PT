@@ -10,7 +10,6 @@ const API_URL =
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 export default function PatientRecord() {
-  console.log({ API_URL, API_KEY });
   //Setting state for controlled form input elements
   const [ptFormData, setPtFormData] = useState({
     DOS: "",
