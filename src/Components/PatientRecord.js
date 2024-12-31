@@ -17,20 +17,23 @@ export default function PatientRecord() {
     OtherInfo: "",
   });
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [response, setResponse] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); //tracks form submission progress
+  const [error, setError] = useState(""); //stores error messages
+  const [response, setResponse] = useState(""); //stores ChatGPT response
+  const [isModalOpen, setIsModalOpen] = useState(false); //tracks visibility of PatientSoapNote component which holds modal
 
-  //Dynamically setting Form Data based on user input
+  //Dynamically setting specific Form Data input elements based on user input
   function onFormDataChange(e) {
-    let { name, value } = e.target;
+    // console.log(e); // onChange event object that contains details about target element
+    // console.log(e.target); //DOM element that triggered the event --> allows access to its properties
+    let { name, value } = e.target; // DOm elements represented as objects --> destructure object to extract props
     setPtFormData((prevFormData) => {
       return { ...prevFormData, [name]: value };
-    });
+    }); //updates corresponding Form Data field
   }
 
-  //Need to convert Date obj to string for HTML
+  //Need to convert Date obj to string format YYYY-MM-DD for HTML date element
+  //Date picker library returns a Date Object
   const handleDateChange = (date) => {
     setPtFormData((prevFormData) => ({
       ...prevFormData,
@@ -46,10 +49,109 @@ export default function PatientRecord() {
     e.preventDefault();
     async function submitPtForm(e) {
       setIsLoading(true);
-      setError("");
-      setResponse("");
+      setError(""); //reset error message for new form submission
+      setResponse(""); //reset response for new form submission
 
-      const query = `${ptFormData.PtInfo}. Other relevant information includes ${ptFormData.OtherInfo}. Please create a physical therapy SOAP note with prior and current functional limitations that are related to self-care, mobility, changing and maintaining body position, community participation, short term and long term goals, suggested exercises, suggested CPT codes, suggested ICD diagnosis codes`;
+      const query = `
+You are a medical assistant helping to create a physical therapy SOAP note. Based on the patient information provided (${ptFormData.PtInfo}), generate a structured JSON object for easy parsing and integration into a form-based interface. Ensure the ICD-10 codes are relevant to the diagnosis and the patient's reported symptoms.
+
+Please use the following structure:
+
+{
+  "Subjective": {
+    "Date": "${ptFormData.DOS}",
+
+    "Diagnosis ICD 10 Codes": {
+      "checkboxes": ["Primary Diagnosis", "Secondary Diagnosis"]
+    },
+
+    "Treatment Diagnosis Codes": {
+      "checkboxes": ["Primary Diagnosis", "Secondary Diagnosis"]
+    },
+
+    "Body Part": {
+      "checkboxes": ["Upper Limb", "Lower Limb", "Spine", "Other"]
+    },
+
+    "Surgery Performed": {
+      "checkboxes": ["Yes", "No"]
+    },
+
+    "Injury / Onset Date / Surgery Date": {
+      "Date": "${ptFormData.PtInfo}",
+      "checkboxes": [
+        "Chronic",
+        "Insidious",
+        "New Injury",
+        "No New Aggravation/Injury"
+      ]
+    },
+
+    "Pain And Functional Limitations": {
+      "PainScale": {
+        "checkboxes": ["Mild", "Moderate", "Severe"]
+      },
+      "Location": {
+        "value": "Include a text field for pain location based on ${ptFormData.PtInfo}"
+      },
+      "AggravatingFactors": {
+        "value": "Include an editable input field for additional comments"
+      },
+      "Comments": {
+        "value": "Include an editable text area for additional comments"
+      }
+    },
+
+    "History Of Present Condition": {
+      "value": "Include an input field summarizing the history and mechanism of injury derived from ${ptFormData.PtInfo}"
+    },
+
+    "Prior Level Of Function": {
+      "categories": [
+        "Self Care",
+        "Hygiene",
+        "Mobility",
+        "Other"
+      ]
+    }
+  },
+
+  "Objective": {
+    "ROM Measurements": {
+      "checkboxes": ["Full", "Moderate Limitation", "Severe Limitation"]
+    },
+    "Strength MMT Measurements": {
+      "checkboxes": ["Normal", "Weak", "Paralysis"]
+    }
+  },
+
+  "Assessment": {
+    "Short Term Goals": {
+      "value": "Suggest up to 3 short term STAR goals relevant to ${ptFormData.PtInfo}"
+    },
+    "Long Term Goals": {
+      "value": "Suggest up to 3 long term STAR goals relevant to ${ptFormData.PtInfo}"
+    }
+  },
+
+  "Plan": {
+    "Exercises": {
+      "checkboxes": ["Stretching", "Strengthening", "Cardio", "Balance"]
+    },
+    "FrequencyAndDuration": {
+      "value": "3 Times a week for 12 Weeks"
+    }
+  },
+
+  "Billing": {
+    "CPT Codes": [
+      {
+        "Code": "Identify CPT codes relevant to ${ptFormData.PtInfo} and the treatment plan",
+        "Units": "Include appropriate units billed for a 1-hour session"
+      }
+    ]
+  }
+}`;
 
       try {
         const result = await fetch(API_URL, {
@@ -67,18 +169,19 @@ export default function PatientRecord() {
               },
               { role: "user", content: query },
             ],
-            max_tokens: 500,
+            max_tokens: 1000,
           }),
         });
-        console.log(result);
+        // console.log(result);
 
+        //error handling for Client/server side errors
         if (result.ok === false) {
           throw new Error("Please re-submit the form with more information");
         }
 
         //jsonify the response object
         const data = await result.json();
-        console.log(data);
+        // console.log(data);
 
         //Pull ChatGPT content out of json
         const responseContent =
@@ -92,40 +195,43 @@ export default function PatientRecord() {
 
         //Update response state
         setResponse((prevResp) => responseContent);
-        // console.log(data.choices[0].message.content.split("\n\n"));
-        //parse responseContent by keywords
 
-        const contentBySection = {};
-        const lines = responseContent.split("\n");
-        let currentSection;
-        lines.forEach((line) => {
-          if (line.toLowerCase().includes("Subjective")) {
-            let currentSection = "Subjective";
-          } else if (line.toLowerCase().includes("Objective")) {
-            let currentSection = "Objective";
-          } else if (line.toLowerCase().includes("Assessment")) {
-            let currentSection = "Assessment";
-          } else if (line.toLowerCase().includes("Plan")) {
-            let currentSection = "Plan";
-          } else {
-            let currentSection = "Additional Information";
-          }
+        // console.log(data.choices[0].message.content.split("\n\n")) or
+        //parse responseContent by keywords for better readability
 
-          if (contentBySection[currentSection]) {
-            contentBySection[currentSection] += `${line}\n`;
-            console.log(contentBySection);
-            console.log(contentBySection[currentSection]);
-          } else {
-            contentBySection[currentSection] = "";
-          }
-        });
+        // const contentBySection = {};
+        // const lines = responseContent.split("\n");
+        // let currentSection;
+        // lines.forEach((line) => {
+        //   if (line.toLowerCase().includes("Subjective")) {
+        //     currentSection = "Subjective";
+        //   } else if (line.toLowerCase().includes("Objective")) {
+        //     currentSection = "Objective";
+        //   } else if (line.toLowerCase().includes("Assessment")) {
+        //     currentSection = "Assessment";
+        //   } else if (line.toLowerCase().includes("Plan")) {
+        //     currentSection = "Plan";
+        //   } else {
+        //     currentSection = "Additional Information";
+        //   }
 
-        setIsModalOpen(true);
+        //   if (contentBySection[currentSection]) {
+        //     contentBySection[currentSection] += `${line}\n`;
+        //     // console.log(contentBySection);
+        //     // console.log(contentBySection[currentSection]);
+        //   } else {
+        //     contentBySection[currentSection] = `${line}\n`;
+        //   }
+        // });
+
+        //code above not needed --> parsing is done in PatientSoapModalTab component converting the string to JSON object
+
+        setIsModalOpen(true); //allow visibility of PatientSoapNote component after successful fetch
       } catch (err) {
         console.log(err);
         setError((prevErr) => err.message);
       } finally {
-        setIsLoading(false);
+        setIsLoading(false); //reset Loading state after form submission
       }
     }
     submitPtForm();

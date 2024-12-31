@@ -19,12 +19,31 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   width: 90%;
   max-width: 600px;
+  max-height: 90vh; /* Constrain modal height to 90% of viewport */
+  display: flex;
+  flex-direction: column; /* Stack header and content */
+}
+
+.modalHeader {
+  position: sticky; /* Keep header visible at the top during scrolling */
+  top: 0;
+  background: white; /* Match modal background */
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd; /* Add a subtle divider */
+}
+
+.modalBody {
+  flex: 1;
+  overflow-y: auto; /* Enable scrolling for modal content */
+  padding-right: 10px; /* Add padding to avoid scrollbar overlap */
 }
 
 .closeButton {
-  position: absolute; /* Position inside the modal content */
-  top: 10px; /* Spacing from the top */
-  right: 10px; /* Spacing from the right */
+  position: relative; /* Positioned inside modalHeader */
   background: none;
   border: none;
   font-size: 20px;
@@ -42,4 +61,53 @@ pre {
   font-family: monospace;
   white-space: pre-wrap; /* Preserve formatting and line breaks */
   word-wrap: break-word;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.tabsContainer {
+  display: flex;
+  justify-content: space-between;
+  overflow-x: auto; /* Enable horizontal scrolling if tabs overflow */
+  margin-bottom: 10px;
+  border-bottom: 2px solid #ddd;
+}
+
+.tabButton {
+  flex: 1;
+  text-align: center;
+  padding: 10px 20px;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.tabButton:hover {
+  background-color: #f9f9f9;
+}
+
+.tabButton.active {
+  font-weight: bold;
+  color: #007bff;
+  border-bottom: 2px solid #007bff;
+}
+
+.tabContent {
+  flex: 1; /* Allow content to grow and take available space */
+  margin-top: 20px;
+  overflow-y: auto; /* Enable vertical scrolling for tab content */
+  max-height: calc(
+    90vh - 120px
+  ); /* Adjust to ensure close button and tabs stay visible */
+  padding-right: 10px; /* Add padding to avoid scrollbar overlap */
+}
+
+.errorMessage {
+  color: red;
+  font-weight: bold;
+  margin-top: 20px;
+  text-align: center;
 }
