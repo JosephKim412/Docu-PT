@@ -21,3 +21,31 @@ root.render(
     </Auth0Provider>
   </React.StrictMode>
 );
+
+/*Component tree
+
+<App/>
+  <Patient Record/>
+  *Handle form creation and manages user input via controlled inputs via state management
+  *Handle form submission to external API (ChatGPT)
+  *handles API responses, storing JSON content with state management 
+  *Handles error and loading statement management
+  *Displays generated SOAP note in a modal
+
+
+
+    <PatientSoapNoteModal/>
+    *Main modal container for displaying Soap Note
+    *Entrypoint for modal
+    *Handles opening and closing of modal (modal management)
+    *Passes patientInfo data to PatientSoapModalTabs component for parsing and rendering
+
+      <PatientSoapNoteTabs/>
+      *Parsing data, managing tab state, and rendering tabs and content
+        <Tab/>
+        *Rendering an individual tab and handling tab-switching
+        <Tab/>
+        <Tab/>
+        <Tab/>
+        <Tab/>
+*/

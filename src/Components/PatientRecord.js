@@ -41,6 +41,16 @@ export default function PatientRecord() {
     }));
   };
 
+  // Helper function to replace placeholders
+  function populateTemplate(queryString, ptFormData) {
+    return queryString.replace(/\${(.*?)}/g, (_, key) => {
+      const value = key
+        .split(".")
+        .reduce((acc, curr) => acc?.[curr], ptFormData);
+      return value !== undefined ? value : ""; // Replace undefined with an empty string
+    });
+  }
+
   //Handling Form Submission
   //1. Async function to make fetch request to ChatGPT API
   //2. Handle slow loading
@@ -52,8 +62,10 @@ export default function PatientRecord() {
       setError(""); //reset error message for new form submission
       setResponse(""); //reset response for new form submission
 
-      const query = `
-You are a medical assistant helping to create a physical therapy SOAP note. Based on the patient information provided (${ptFormData.PtInfo}), generate a structured JSON object for easy parsing and integration into a form-based interface. Ensure the ICD-10 codes are relevant to the diagnosis and the patient's reported symptoms.
+      const rawQuery = `
+You are a medical assistant helping to create a physical therapy SOAP note. Based on the patient information provided (${
+        ptFormData.PtInfo
+      }), generate a structured JSON object for easy parsing and integration into a form-based interface. Ensure the ICD-10 codes are relevant to the diagnosis and the patient's reported symptoms.
 
 Please use the following structure:
 
@@ -61,24 +73,43 @@ Please use the following structure:
   "Subjective": {
     "Date": "${ptFormData.DOS}",
 
-    "Diagnosis ICD 10 Codes": {
-      "checkboxes": ["Primary Diagnosis", "Secondary Diagnosis"]
-    },
+    "Diagnosis ICD 10 Codes": "Please include 3 relevant ICD 10 Codes based on ${
+      ptFormData.PtInfo
+    }",
 
-    "Treatment Diagnosis Codes": {
-      "checkboxes": ["Primary Diagnosis", "Secondary Diagnosis"]
-    },
+    "Treatment Diagnosis Codes": "${"Copy the Diagnosis ICD 10 Codes provided above"}",
 
-    "Body Part": {
-      "checkboxes": ["Upper Limb", "Lower Limb", "Spine", "Other"]
-    },
+    "Body Part": "Please include the appropriate body part based on ${
+      ptFormData.PtInfo
+    }"
 
-    "Surgery Performed": {
-      "checkboxes": ["Yes", "No"]
-    },
+   "Surgery Performed": 
+      "checkboxes": [
+        {
+          "label": "Yes",
+          "checked": ${
+            ptFormData.PtInfo.toLowerCase().includes("surgery") ||
+            ptFormData.PtInfo.toLowerCase().includes("operation")
+              ? true
+              : false
+          }
+        },
+        {
+          "label": "No",
+          "checked": ${
+            !ptFormData.PtInfo.toLowerCase().includes("surgery") &&
+            !ptFormData.PtInfo.toLowerCase().includes("operation")
+              ? true
+              : false
+          }
+        }
+      ],
+
 
     "Injury / Onset Date / Surgery Date": {
-      "Date": "${ptFormData.PtInfo}",
+      "Date": "Please include the appropriate date based on ${
+        ptFormData.PtInfo
+      }",
       "checkboxes": [
         "Chronic",
         "Insidious",
@@ -87,34 +118,29 @@ Please use the following structure:
       ]
     },
 
-    "Pain And Functional Limitations": {
-      "PainScale": {
+   
+      "Pain Scale": {
         "checkboxes": ["Mild", "Moderate", "Severe"]
       },
-      "Location": {
-        "value": "Include a text field for pain location based on ${ptFormData.PtInfo}"
-      },
-      "AggravatingFactors": {
-        "value": "Include an editable input field for additional comments"
-      },
-      "Comments": {
-        "value": "Include an editable text area for additional comments"
-      }
-    },
+      "Location": "Include appropriate pain location based on ${
+        ptFormData.PtInfo
+      }",
 
-    "History Of Present Condition": {
-      "value": "Include an input field summarizing the history and mechanism of injury derived from ${ptFormData.PtInfo}"
-    },
+      "Aggravating Factors": "Please include the appropriate Aggravating Factors based on ${
+        ptFormData.PtInfo
+      }",
+      "Comments": "Please include the appropriate comments based on ${
+        ptFormData.PtInfo
+      }",
+    
 
-    "Prior Level Of Function": {
-      "categories": [
-        "Self Care",
-        "Hygiene",
-        "Mobility",
-        "Other"
-      ]
-    }
-  },
+    "History Of Present Condition": "Include an input field summarizing the history and mechanism of injury derived from ${
+      ptFormData.PtInfo
+    }",
+
+    "Prior Level Of Function": "Please include the appropriate comments based on ${
+      ptFormData.PtInfo
+    }",
 
   "Objective": {
     "ROM Measurements": {
@@ -127,17 +153,19 @@ Please use the following structure:
 
   "Assessment": {
     "Short Term Goals": {
-      "value": "Suggest up to 3 short term STAR goals relevant to ${ptFormData.PtInfo}"
+      "value": "Suggest up to 3 short term STAR goals relevant to ${
+        ptFormData.PtInfo
+      }"
     },
     "Long Term Goals": {
-      "value": "Suggest up to 3 long term STAR goals relevant to ${ptFormData.PtInfo}"
+      "value": "Suggest up to 3 long term STAR goals relevant to ${
+        ptFormData.PtInfo
+      }"
     }
   },
 
   "Plan": {
-    "Exercises": {
-      "checkboxes": ["Stretching", "Strengthening", "Cardio", "Balance"]
-    },
+    "Exercises": "Suggest up to 3 exercises relevant to ${ptFormData.PtInfo}",
     "FrequencyAndDuration": {
       "value": "3 Times a week for 12 Weeks"
     }
@@ -146,12 +174,17 @@ Please use the following structure:
   "Billing": {
     "CPT Codes": [
       {
-        "Code": "Identify CPT codes relevant to ${ptFormData.PtInfo} and the treatment plan",
+        "Code": "Identify CPT codes relevant to ${
+          ptFormData.PtInfo
+        } and the treatment plan",
         "Units": "Include appropriate units billed for a 1-hour session"
       }
     ]
   }
 }`;
+
+      //Use helper function to process raw Query string with template literals
+      const query = populateTemplate(rawQuery, ptFormData);
 
       try {
         const result = await fetch(API_URL, {
